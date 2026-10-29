@@ -356,6 +356,8 @@ def prep_content(stats: dict[str, Any], /):
         displayed_count += 1
         if stop_at_other and lang_name == "Other":
             break
+        if language_count == -1:
+            continue
         if language_count > 0 and displayed_count >= language_count:
             break
 

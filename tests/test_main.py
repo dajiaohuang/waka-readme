@@ -155,6 +155,28 @@ class TestMain(unittest.TestCase):
         self.assertIn("Rust", contents)
         self.assertIn("Go", contents)
 
+    def test_stop_at_other_with_unlimited_language_count(self) -> None:
+        """STOP_AT_OTHER should still stop when LANG_COUNT is unlimited."""
+        waka_input = prime.WakaInput(
+            language_count=-1,
+            stop_at_other=True,
+            show_time=False,
+        )
+        stats = {
+            "languages": [
+                {"name": "Python", "text": "8 hrs", "percent": 80.0},
+                {"name": "Other", "text": "2 hrs", "percent": 20.0},
+                {"name": "Rust", "text": "1 hr", "percent": 10.0},
+            ]
+        }
+
+        with patch.object(prime, "wk_i", waka_input, create=True):
+            contents = prime.prep_content(stats)
+
+        self.assertEqual(len(contents.splitlines()), 2)
+        self.assertIn("Other", contents)
+        self.assertNotIn("Rust", contents)
+
 
 tds = TestData()
 tds.populate()
